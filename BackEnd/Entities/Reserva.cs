@@ -10,6 +10,11 @@ namespace SistemaDeHospedagem.BackEnd.Entities
         public Suite Suite { get; set; }
         public int DiasReservados { get; set; }
 
+        public Reserva()
+        {
+
+        }
+        
         public Reserva(int diasReservados)
         {           
             DiasReservados = diasReservados;

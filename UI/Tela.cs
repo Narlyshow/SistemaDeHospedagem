@@ -9,7 +9,7 @@ namespace SistemaDeHospedagem.UI
     public class Tela
     {
         List<Pessoa> hospedes = new List<Pessoa>();
-        Suite suite = new Suite(tipoSuite: "Premium", capacidade: 2, valorDiaria: 30);
+        Reserva reserva = new Reserva();
 
         public void TelaInicial()
         {
@@ -53,7 +53,8 @@ namespace SistemaDeHospedagem.UI
             ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
 
 
-
+            
+           
 
 
 
@@ -61,7 +62,48 @@ namespace SistemaDeHospedagem.UI
 
         }
 
+        
+        public void CriarSuite(int entradaTeclado)
+        {
+            string suite = String.Empty;
+            int capacidade = 0;
+            decimal valorDiaria = 0;
 
+            switch (entradaTeclado)
+            {
+                case 1:
+                    suite = "Premium";
+                    capacidade = 5;
+                    valorDiaria = 100.00m;
+                    break;
+                case 2:
+                    suite = "Convencional";
+                    capacidade = 10;
+                    valorDiaria = 70.00m;
+                    break;
+                case 3:
+                    suite = "Família";
+                    capacidade = 2;
+                    valorDiaria = 150.00m;
+                    break;
+                case 4:
+                    suite = "Individual";
+                    capacidade = 1;
+                    valorDiaria = 50.00m;
+                    break;
+                default:
+                    break;
+            }
+
+            new Suite(suite, capacidade, valorDiaria);
+        
+        }
+        
+        /// <summary>
+        /// Metodo para montar o nome completo
+        /// </summary>
+        /// <param name="hospede"></param>
+        /// <returns></returns>
         public string EditarNome(string[] hospede)
         {
             string sobrenome = string.Empty;
@@ -76,7 +118,9 @@ namespace SistemaDeHospedagem.UI
         }
 
 
-
+        /// <summary>
+        /// Metodo para sair do programa
+        /// </summary>
         public void Exit()
         {
             Console.WriteLine("Encerrando sessão em...");
@@ -94,7 +138,10 @@ namespace SistemaDeHospedagem.UI
         }
 
     
-    
+        /// <summary>
+        /// Metodo para exibir na tela a escolha da suite
+        /// </summary>
+        /// <returns></returns>
         public string TelaEscolherSuite()
         {
             StringBuilder sb = new StringBuilder();
@@ -108,7 +155,14 @@ namespace SistemaDeHospedagem.UI
             return sb.ToString();
         }
     
-   
+        
+        /// <summary>
+        /// Método para validar as opções do usuário
+        /// </summary>
+        /// <param name="entradaTeclado"></param>
+        /// <param name="result"></param>
+        /// <param name="etapa"></param>
+        /// <returns></returns>
         public ref string ValidacaoDeOpcoes(ref string entradaTeclado, bool result, string etapa)
         {
             
