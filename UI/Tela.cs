@@ -9,7 +9,7 @@ namespace SistemaDeHospedagem.UI
     public class Tela
     {
         List<Pessoa> hospedes = new List<Pessoa>();
-        Suite suite = new Suite(tipoSuite: "Premium", capacidade: 2, valorDiaria: 30);
+        Reserva reserva = new Reserva();
 
         public void TelaInicial()
         {
@@ -26,23 +26,23 @@ namespace SistemaDeHospedagem.UI
             var entradaTeclado = Console.ReadLine();
             bool result = Int32.TryParse(entradaTeclado, out n);
             string etapa = "tela1";
-            
+
             ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
 
 
-           
+
 
             for (int i = 1; i <= Convert.ToInt32(entradaTeclado); i++)
             {
-                
+
                 Console.Clear();
-                
+
                 Console.WriteLine($"Digite o nome do {i}º Hóspede:");
                 string[] hospede = Console.ReadLine().Split(' ');
                 string sobrenome = EditarNome(hospede);
                 Pessoa p1 = new Pessoa(nome: hospede[0], sobrenome: sobrenome);
                 hospedes.Add(p1);
-                
+
             }
 
 
@@ -52,7 +52,12 @@ namespace SistemaDeHospedagem.UI
             result = Int32.TryParse(entradaTeclado, out n);
             ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
 
+            
+            Console.WriteLine("Quantos dias de hospedagem? ");
+            int diasReservados = int.Parse(Console.ReadLine());
+            new Reserva(diasReservados);
 
+            reserva.CadastrarHospedes(hospedes);
 
 
 
@@ -65,12 +70,12 @@ namespace SistemaDeHospedagem.UI
         public string EditarNome(string[] hospede)
         {
             string sobrenome = string.Empty;
-            
+
             for (int i = 1; i < hospede.Length; i++)
             {
                 sobrenome += hospede[i] + " ";
             }
-            
+
 
             return sobrenome.TrimEnd();
         }
@@ -93,8 +98,8 @@ namespace SistemaDeHospedagem.UI
             Environment.Exit(0);
         }
 
-    
-    
+
+
         public string TelaEscolherSuite()
         {
             StringBuilder sb = new StringBuilder();
@@ -107,12 +112,12 @@ namespace SistemaDeHospedagem.UI
 
             return sb.ToString();
         }
-    
-   
+
+
         public ref string ValidacaoDeOpcoes(ref string entradaTeclado, bool result, string etapa)
         {
-            
-            
+
+
             if (etapa == "tela1")
             {
                 if (result)
@@ -177,6 +182,48 @@ namespace SistemaDeHospedagem.UI
 
             return ref entradaTeclado;
         }
-    
+
+        public void CriarSuite(int entradaTeclado)
+        {
+            string suite = "";
+            int capacidade = 0;
+            decimal valorDiaria = 0.0m;
+
+            switch (entradaTeclado)
+            {
+                case 1:
+                    suite = "Premium";
+                    capacidade = 5;
+                    valorDiaria = 100.00m;
+                    break;
+
+                case 2:
+                    suite = "Convencional";
+                    capacidade = 2;
+                    valorDiaria = 70.00m;
+                    break;
+                case 3:
+                    suite = "Familia";
+                    capacidade = 10;
+                    valorDiaria = 150.00m;
+                    break;
+                case 4:
+                    suite = "Individual";
+                    capacidade = 1;
+                    valorDiaria = 50.00m;
+                    break;
+                default:
+                    break;
+
+                    Suite Suite = new Suite(suite, capacidade, valorDiaria);
+                    
+
+            }
+
+        }
+
+        
+
+
     }
 }
