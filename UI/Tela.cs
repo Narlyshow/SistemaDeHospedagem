@@ -8,7 +8,8 @@ namespace SistemaDeHospedagem.UI
 {
     public class Tela
     {
-
+        List<Pessoa> hospedes = new List<Pessoa>();
+        Suite suite = new Suite(tipoSuite: "Premium", capacidade: 2, valorDiaria: 30);
 
         public void TelaInicial()
         {
@@ -22,41 +23,16 @@ namespace SistemaDeHospedagem.UI
 
 
             int n;
-            var quantidadeHospedes = Console.ReadLine();
-            bool result = Int32.TryParse(quantidadeHospedes, out n);
+            var entradaTeclado = Console.ReadLine();
+            bool result = Int32.TryParse(entradaTeclado, out n);
+            string etapa = "tela1";
+            
+            ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
 
 
-            if (result)
-            {
+           
 
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida!\nDigite a quantidade de hóspedes ou digite 0 para sair!");
-                try
-                {
-                    quantidadeHospedes = Console.ReadLine();
-                    if (Convert.ToInt32(quantidadeHospedes) == 0)
-                    {
-                        Console.Clear();
-                        Exit();
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("ERRO FATAL " + ex.Message);
-                    Console.WriteLine("Pressione qualquer tecla para continuar");
-                    Console.ReadKey();
-                    Console.Clear();
-                    TelaInicial();
-
-                }
-            }
-
-            List<Pessoa> hospedes = new List<Pessoa>();
-
-            for (int i = 1; i <= Convert.ToInt32(quantidadeHospedes); i++)
+            for (int i = 1; i <= Convert.ToInt32(entradaTeclado); i++)
             {
                 
                 Console.Clear();
@@ -66,7 +42,17 @@ namespace SistemaDeHospedagem.UI
                 string sobrenome = EditarNome(hospede);
                 Pessoa p1 = new Pessoa(nome: hospede[0], sobrenome: sobrenome);
                 hospedes.Add(p1);
+                
             }
+
+
+            etapa = "tela2";
+            Console.WriteLine(TelaEscolherSuite());
+            entradaTeclado = Console.ReadLine();
+            result = Int32.TryParse(entradaTeclado, out n);
+            ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
+
+
 
 
 
@@ -107,5 +93,90 @@ namespace SistemaDeHospedagem.UI
             Environment.Exit(0);
         }
 
+    
+    
+        public string TelaEscolherSuite()
+        {
+            StringBuilder sb = new StringBuilder();
+            Console.Clear();
+            sb.AppendLine("Escolha o tipo da suíte que deseja reservar:");
+            sb.AppendLine(" 1 - TIPO: Premium CAPACIDADE: 5 Pessoas PREÇO DIÁRIA: R$ 100,00");
+            sb.AppendLine(" 2 - TIPO: Convencional CAPACIDADE: 2 Pessoas PREÇO DIÁRIA: R$ 70,00");
+            sb.AppendLine(" 3 - TIPO: Família CAPACIDADE: 10 Pessoas PREÇO DIÁRIA: R$ 150,00");
+            sb.AppendLine(" 4 - TIPO: Individual CAPACIDADE: 01 Pessoa PREÇO DIÁRIA: R$ 50,00");
+
+            return sb.ToString();
+        }
+    
+   
+        public ref string ValidacaoDeOpcoes(ref string entradaTeclado, bool result, string etapa)
+        {
+            
+            
+            if (etapa == "tela1")
+            {
+                if (result)
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida!\nDigite a quantidade de hóspedes ou digite 0 para sair!");
+                    try
+                    {
+                        entradaTeclado = Console.ReadLine();
+                        if (Convert.ToInt32(entradaTeclado) == 0)
+                        {
+                            Console.Clear();
+                            Exit();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("ERRO FATAL " + ex.Message);
+                        Console.WriteLine("Pressione qualquer tecla para continuar");
+                        Console.ReadKey();
+                        Console.Clear();
+                        TelaInicial();
+
+                    }
+                }
+            }
+            else
+            {
+                if (result)
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida!\nDigite uma das opções disponíveis ou digite 0 para sair!");
+                    try
+                    {
+                        entradaTeclado = Console.ReadLine();
+                        if (Convert.ToInt32(entradaTeclado) == 0)
+                        {
+                            Console.Clear();
+                            Exit();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("ERRO FATAL " + ex.Message);
+                        Console.WriteLine("Pressione qualquer tecla para continuar");
+                        Console.ReadKey();
+                        Console.Clear();
+                        Console.WriteLine(TelaEscolherSuite());
+
+                    }
+                }
+            }
+
+
+            return ref entradaTeclado;
+        }
+    
     }
 }

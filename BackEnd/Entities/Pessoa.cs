@@ -24,5 +24,9 @@ namespace SistemaDeHospedagem.BackEnd.Entities
             Nome = nome;
             Sobrenome = sobrenome;
         }
+   
+        
+    
+    
     }
 }
