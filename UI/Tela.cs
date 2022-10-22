@@ -9,10 +9,11 @@ namespace SistemaDeHospedagem.UI
     public class Tela
     {
         List<Pessoa> hospedes = new List<Pessoa>();
-        Reserva reserva = new Reserva();
+
 
         public void TelaInicial()
         {
+            var suite = new Suite();
             int op = 1;
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -26,23 +27,23 @@ namespace SistemaDeHospedagem.UI
             var entradaTeclado = Console.ReadLine();
             bool result = Int32.TryParse(entradaTeclado, out n);
             string etapa = "tela1";
-            
+
             ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
 
 
-           
+
 
             for (int i = 1; i <= Convert.ToInt32(entradaTeclado); i++)
             {
-                
+
                 Console.Clear();
-                
+
                 Console.WriteLine($"Digite o nome do {i}º Hóspede:");
                 string[] hospede = Console.ReadLine().Split(' ');
                 string sobrenome = EditarNome(hospede);
                 Pessoa p1 = new Pessoa(nome: hospede[0], sobrenome: sobrenome);
                 hospedes.Add(p1);
-                
+
             }
 
 
@@ -52,42 +53,114 @@ namespace SistemaDeHospedagem.UI
             result = Int32.TryParse(entradaTeclado, out n);
             ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
 
+            Suite s = CriarSuite(Convert.ToInt32(entradaTeclado));
 
-            
-           
+            Console.Clear();
+            Console.WriteLine("Quantos dias você quer reservar?");
+            int dias = int.Parse(Console.ReadLine());
+            Reserva reserva = new Reserva(dias);
+            reserva.CadastrarSuite(s);
+            reserva.CadastrarHospedes(hospedes);
 
 
+            Console.WriteLine(RevisaoReserva(reserva, s));
+            Console.WriteLine();
+            FinalizarReserva();
 
 
 
         }
 
-        
-        public void CriarSuite(int entradaTeclado)
+
+
+        public void FinalizarReserva()
         {
-            string suite = String.Empty;
+            bool count = true;
+
+            Console.WriteLine("Digite ENTER para salvar:\nDigite ESC para menu principal:\nOu 0 para sair!");
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                ConsoleSpiner spin = new ConsoleSpiner();
+                Console.Write("Salvando.....");
+                while (count)
+                {
+                    spin.Turn();
+                    if (spin.counter == 101765)
+                    {
+                        count = false;
+                    }
+                }
+                Console.Clear();
+                Console.WriteLine("SALVO COM SUCESSO!");
+            }
+            else if (keyInfo.Key == ConsoleKey.Escape)
+            {
+                Console.Clear();
+                TelaInicial();
+            }
+            else if(keyInfo.Key == ConsoleKey.NumPad0)
+            {
+                Exit();
+            }
+            else
+            {
+                Console.WriteLine("Digite uma opção válida:");
+                Console.Clear();
+                FinalizarReserva();
+            }
+
+
+
+        }
+
+        public string RevisaoReserva(Reserva reserva, Suite s)
+        {
+            Console.Clear();
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("* REVISE SUA RESERVA *");
+            sb.AppendLine($"Hóspedes: {reserva.ObterQuantidadeHospedes()}");
+            sb.Append(reserva.ToString());
+            sb.AppendLine($"Valor total : {reserva.CalcularValorDiaria()}");
+            sb.AppendLine($"Dias reservados: {reserva.DiasReservados}");
+            sb.AppendLine("* DETALHES DA SUITE *");
+            sb.AppendLine($"Tipo suite: {s.TipoSuite}");
+            sb.AppendLine($"Capacidade: {s.Capacidade}");
+            sb.AppendLine($"Valor diária por: {s.ValorDiaria}");
+
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Metodo para inserir no objeto suite
+        /// </summary>
+        /// <param name="entradaTeclado"></param>
+        public Suite CriarSuite(int entradaTeclado)
+        {
+            string tipoSuite = String.Empty;
             int capacidade = 0;
             decimal valorDiaria = 0;
 
             switch (entradaTeclado)
             {
                 case 1:
-                    suite = "Premium";
+                    tipoSuite = "Premium";
                     capacidade = 5;
                     valorDiaria = 100.00m;
                     break;
                 case 2:
-                    suite = "Convencional";
+                    tipoSuite = "Convencional";
                     capacidade = 10;
                     valorDiaria = 70.00m;
                     break;
                 case 3:
-                    suite = "Família";
+                    tipoSuite = "Família";
                     capacidade = 2;
                     valorDiaria = 150.00m;
                     break;
                 case 4:
-                    suite = "Individual";
+                    tipoSuite = "Individual";
                     capacidade = 1;
                     valorDiaria = 50.00m;
                     break;
@@ -95,10 +168,10 @@ namespace SistemaDeHospedagem.UI
                     break;
             }
 
-            new Suite(suite, capacidade, valorDiaria);
-        
+            return new Suite(tipoSuite, capacidade, valorDiaria);
+
         }
-        
+
         /// <summary>
         /// Metodo para montar o nome completo
         /// </summary>
@@ -107,12 +180,12 @@ namespace SistemaDeHospedagem.UI
         public string EditarNome(string[] hospede)
         {
             string sobrenome = string.Empty;
-            
+
             for (int i = 1; i < hospede.Length; i++)
             {
                 sobrenome += hospede[i] + " ";
             }
-            
+
 
             return sobrenome.TrimEnd();
         }
@@ -137,7 +210,7 @@ namespace SistemaDeHospedagem.UI
             Environment.Exit(0);
         }
 
-    
+
         /// <summary>
         /// Metodo para exibir na tela a escolha da suite
         /// </summary>
@@ -154,8 +227,8 @@ namespace SistemaDeHospedagem.UI
 
             return sb.ToString();
         }
-    
-        
+
+
         /// <summary>
         /// Método para validar as opções do usuário
         /// </summary>
@@ -165,8 +238,8 @@ namespace SistemaDeHospedagem.UI
         /// <returns></returns>
         public ref string ValidacaoDeOpcoes(ref string entradaTeclado, bool result, string etapa)
         {
-            
-            
+
+
             if (etapa == "tela1")
             {
                 if (result)
@@ -231,6 +304,6 @@ namespace SistemaDeHospedagem.UI
 
             return ref entradaTeclado;
         }
-    
+
     }
 }
