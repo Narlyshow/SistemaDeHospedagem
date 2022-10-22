@@ -75,5 +75,14 @@ namespace SistemaDeHospedagem.BackEnd.Entities
 
             return Convert.ToDecimal(String.Format("{0:0.00}", diaria));
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Pessoa hospede in Hospedes)
+                sb.AppendLine($"Nome do hóspede : {hospede.NomeCompleto}");
+
+            return sb.ToString();
+        }
     }
 }

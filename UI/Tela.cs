@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using SistemaDeHospedagem.BackEnd.Entities;
+using System.Globalization;
 
 namespace SistemaDeHospedagem.UI
 {
     public class Tela
     {
         List<Pessoa> hospedes = new List<Pessoa>();
-        Reserva reserva = new Reserva();
+        Suite suite = new Suite();
 
         public void TelaInicial()
         {
@@ -52,20 +53,90 @@ namespace SistemaDeHospedagem.UI
             result = Int32.TryParse(entradaTeclado, out n);
             ValidacaoDeOpcoes(ref entradaTeclado, result, etapa);
 
-            
+
+
+            Suite s = CriarSuite(Convert.ToInt32(entradaTeclado));
+
+            Console.Clear();
             Console.WriteLine("Quantos dias de hospedagem? ");
             int diasReservados = int.Parse(Console.ReadLine());
-            new Reserva(diasReservados);
-
+            Reserva reserva = new Reserva(diasReservados);
+            reserva.CadastrarSuite(s);
             reserva.CadastrarHospedes(hospedes);
 
-
-
-
-
+            Console.WriteLine();
+            Console.WriteLine(RevisaoReserva(reserva, s));
+           
+            FinalizarReserva();
+            
 
         }
 
+
+        public void FinalizarReserva()
+        {
+            
+            Console.Write("[ENTER]Confirmar Reserva\n[ESC]Dados incorretos.");
+            ConsoleKeyInfo resposta = Console.ReadKey();
+
+            if (resposta.Key == ConsoleKey.Enter) {
+                Console.Clear();
+                Console.WriteLine("--------------------------------------");
+                Console.WriteLine("Reserva Realizada!");
+                Console.WriteLine("--------------------------------------");
+            }
+            else if(resposta.Key == ConsoleKey.Escape)
+            {
+                Console.Clear();
+                Console.WriteLine("--------------------------------------");
+                Console.WriteLine("00 PARA SAIR.\n1 PARA FAZER UMA NOVA RESERVA.");
+                Console.WriteLine("--------------------------------------");
+                resposta = Console.ReadKey();
+                Console.Clear();
+
+                if (resposta.Key == ConsoleKey.NumPad0)
+                {
+                    Exit();
+                }
+                else if (resposta.Key == ConsoleKey.NumPad1)
+                {
+                    Console.Write("Reiniciando.");
+                    Thread.Sleep(1000);
+                    Console.Write(".");
+                    Thread.Sleep(1000);
+                    Console.Write(".");
+                    Thread.Sleep(2000);
+                    Console.Write(".");
+                    Console.Clear();
+                    TelaInicial();
+                }
+            }
+
+        }
+
+        public string RevisaoReserva(Reserva reserva, Suite s)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            Console.Clear();
+            sb.AppendLine("     * REVISE SUA RESERVA *");
+            sb.AppendLine("--------------------------------------");
+            sb.AppendLine(reserva.ToString());
+            sb.AppendLine("--------------------------------------");
+            sb.AppendLine("     * DETALHES DA SUITE *");
+            sb.AppendLine($"Tipo da Suite: {s.TipoSuite}");
+            sb.AppendLine($"Capacidade da Suite: {s.Capacidade}");
+            sb.AppendLine($"Valor da Diária: R${s.ValorDiaria}");
+            sb.AppendLine($"Dias Reservados: {reserva.DiasReservados}");
+            sb.AppendLine("--------------------------------------");
+            sb.AppendLine("     * NOTA FISCAL ELETRONICA *");
+            sb.AppendLine($"A quantidade de pessoas hospedadas são: {reserva.ObterQuantidadeHospedes()}");
+            sb.AppendLine($"SubTotal: R${reserva.CalcularValorDiaria().ToString("F2", CultureInfo.InvariantCulture)}");
+            sb.AppendLine("--------------------------------------");
+
+            sb.AppendLine();
+            return sb.ToString();
+        }
 
         public string EditarNome(string[] hospede)
         {
@@ -95,6 +166,7 @@ namespace SistemaDeHospedagem.UI
             Console.Clear();
             Console.WriteLine("1");
             Thread.Sleep(1000);
+            Console.Clear();
             Environment.Exit(0);
         }
 
@@ -183,7 +255,7 @@ namespace SistemaDeHospedagem.UI
             return ref entradaTeclado;
         }
 
-        public void CriarSuite(int entradaTeclado)
+        public Suite CriarSuite(int entradaTeclado)
         {
             string suite = "";
             int capacidade = 0;
@@ -195,34 +267,36 @@ namespace SistemaDeHospedagem.UI
                     suite = "Premium";
                     capacidade = 5;
                     valorDiaria = 100.00m;
+
                     break;
 
                 case 2:
                     suite = "Convencional";
                     capacidade = 2;
                     valorDiaria = 70.00m;
+
                     break;
                 case 3:
                     suite = "Familia";
                     capacidade = 10;
                     valorDiaria = 150.00m;
+
                     break;
                 case 4:
                     suite = "Individual";
                     capacidade = 1;
                     valorDiaria = 50.00m;
+
                     break;
                 default:
+                    return new Suite();
                     break;
-
-                    Suite Suite = new Suite(suite, capacidade, valorDiaria);
-                    
-
             }
+            return new Suite(suite, capacidade, valorDiaria);
 
         }
 
-        
+
 
 
     }
