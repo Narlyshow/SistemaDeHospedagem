@@ -10,7 +10,9 @@ namespace SistemaDeHospedagem.UI
     {
         List<Pessoa> hospedes = new List<Pessoa>();
 
-
+        /// <summary>
+        /// Porta de entrada para todas as interações do usuário
+        /// </summary>
         public void TelaInicial()
         {
             var suite = new Suite();
@@ -72,7 +74,9 @@ namespace SistemaDeHospedagem.UI
         }
 
 
-
+        /// <summary>
+        /// Método que inclui a finalização da reserva 
+        /// </summary>
         public void FinalizarReserva()
         {
             bool count = true;
@@ -114,6 +118,12 @@ namespace SistemaDeHospedagem.UI
 
         }
 
+        /// <summary>
+        /// Interação do usuário para validação da sua reserva
+        /// </summary>
+        /// <param name="reserva"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public string RevisaoReserva(Reserva reserva, Suite s)
         {
             Console.Clear();
